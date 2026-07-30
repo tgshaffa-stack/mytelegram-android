@@ -1,0 +1,58 @@
+name: Build Telegram APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew || true
+
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace || gradle assembleDebug --stacktrace
+
+    - name: Send APK to Telegram (On Success)
+      if: success()
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        document: TMessagesProj/build/outputs/apk/debug/*.apk
+        message: |
+          🚀 Сборка Oreogram завершена успешно!
+          
+          📌 Репозиторий: ${{ github.repository }}
+          🔀 Ветка: ${{ github.ref_name }}
+          📝 Коммит: ${{ github.event.head_commit.message }}
+
+    - name: Send Error Notification to Telegram (On Failure)
+      if: failure()
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: |
+          ❌ Сборка Oreogram завершилась ОШИБКОЙ!
+          
+          📌 Репозиторий: ${{ github.repository }}
+          🔀 Ветка: ${{ github.ref_name }}
+          📝 Коммит: ${{ github.event.head_commit.message }}
+          
+          🔍 Проверить лог ошибки можно во вкладке Actions на GitHub.
