@@ -94,7 +94,7 @@
         </intent>
     </queries>
 
-    <application android:usesCleartextTraffic="true"
+    <application 
         android:name="org.telegram.messenger.ApplicationLoader"
         android:allowBackup="true"
         android:restoreAnyVersion="true"
@@ -108,7 +108,7 @@
         android:preserveLegacyExternalStorage="true"
         android:allowAudioPlaybackCapture="true"
         tools:replace="android:supportsRtl"
-        android:usesCleartextTraffic="true"
+        
         android:enableOnBackInvokedCallback="true"
     >
         <!-- usesCleartextTraffic for browser supporting opening http:// links -->
