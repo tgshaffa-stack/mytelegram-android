@@ -24,10 +24,10 @@ jobs:
         run: chmod +x gradlew || true
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace || gradle assembleDebug --stacktrace
+        run: ./gradlew :TMessagesProj:assembleafatDebug --stacktrace || ./gradlew :TMessagesProj:assembleDebug --stacktrace
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Messenger-Light-APK
-          path: "**/build/outputs/apk/debug/*.apk"
+          name: Messenger-APK
+          path: "**/build/outputs/apk/**/*.apk"
